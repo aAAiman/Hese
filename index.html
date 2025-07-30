@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hese</title>
+  <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' https://cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https://avatars.steamstatic.com https://steamcdn-a.akamaihd.net;
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+      ">
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .gradient-bg {
+      background-color: #0d1117;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .steam-card {
+      backdrop-filter: blur(25px);
+      background: rgba(22, 27, 34, 0.8);
+      border: 1px solid #30363d;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      position: relative;
+    }
+
+    .steam-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(35, 134, 54, 0.1);
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .steam-card:hover::before {
+      opacity: 1;
+    }
+
+    .steam-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 60px rgba(35, 134, 54, 0.15);
+      border: 1px solid #238636;
+    }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(35, 134, 54, 0.3);
+      transition: left 0.8s ease;
+    }
+
+    .game-card:hover::before {
+      left: 100%;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05) translateY(-15px) rotateX(2deg);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+      border: 1px solid #238636;
+    }
+
+    .profile-avatar {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-avatar::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg,
+          #238636, #2ea043, #39d353, #238636);
+      animation: rotate 3s linear infinite;
+      z-index: -1;
+    }
+
+    .profile-avatar img {
+      position: relative;
+      z-index: 1;
+      border: 4px solid white;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .pulse-border {
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+
+      0%,
+      100% {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      50% {
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .loading-dots {
+      display: inline-block;
+    }
+
+    .loading-dots::after {
+      content: '...';
+      animation: dots 2s infinite;
+    }
+
+    @keyframes dots {
+
+      0%,
+      20% {
+        content: '.';
+      }
+
+      40% {
+        content: '..';
+      }
+
+      60%,
+      100% {
+        content: '...';
+      }
+    }
+
+    .stats-counter {
+      font-weight: 800;
+      font-size: 2.5rem;
+      color: #39d353;
+      text-shadow: 0 0 30px rgba(57, 211, 83, 0.5);
+    }
+
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: #39d353;
+      border-radius: 2px;
+      box-shadow: 0 0 20px rgba(57, 211, 83, 0.4);
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #39d353;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Smooth scrolling for sections */
+    section {
+      scroll-margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body class="gradient-bg">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-black bg-opacity-50 backdrop-blur-md border-b border-white/10">
+    <div class="container mx-auto flex justify-between items-center px-6 py-4">
+      <h1 class="text-2xl font-black text-white">
+        🎮 My Gaming Profile
+      </h1>
+      <nav class="space-x-6">
+        <a href="#home" class="nav-link text-gray-200 hover:text-white transition">Home</a>
+        <a href="#about" class="nav-link text-gray-200 hover:text-white transition">About</a>
+        <a href="#games" class="nav-link text-gray-200 hover:text-white transition">Games</a>
+        <a href="#media" class="nav-link text-gray-200 hover:text-white transition">Media</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container mx-auto px-4 py-8">
+
+    <!-- Section: Home -->
+    <section id="home" class="text-center py-24">
+      <h1 class="text-6xl font-black text-white mb-6 floating tracking-tight">
+        🎮 Gaming Profile
+      </h1>
+      <p class="text-2xl text-gray-200 font-medium tracking-wide">Powered by Steam API</p>
+    </section>
+
+    <!-- Section: About -->
+    <section id="about" class="py-20" aria-label="About Me">
+      <div class="text-center mb-12">
+        <h2 class="section-title text-4xl font-black text-white tracking-tight">
+          About Me
+        </h2>
+      </div>
+      <div id="profile-section" class="max-w-4xl mx-auto"></div>
+    </section>
+
+    <!-- Section: Games -->
+    <section id="games" class="py-20" aria-label="Game List">
+      <div class="text-center mb-12">
+        <h2 class="section-title text-4xl font-black text-white tracking-tight">
+          Recently Played Games
+        </h2>
+      </div>
+      <div id="game-list" class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto'></div>
+    </section>
+
+    <!-- Section: Media -->
+    <section id="media" class="py-20 text-center text-white" aria-label="Media">
+      <div class="text-center mb-12">
+        <h2 class="section-title text-4xl font-black text-white tracking-tight">Media</h2>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="steam-card rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-white mb-6">Follow My Content</h3>
+          <div class="flex justify-center">
+            <a href="https://www.youtube.com/@Theboy-rq5dl" target="_blank" rel="noopener noreferrer"
+              class="youtube-link flex items-center space-x-4 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+              <div class="text-left">
+                <div class="text-lg font-black">YouTube Channel</div>
+              </div>
+            </a>
+          </div>
+          <p class="text-gray-300 text-sm mt-4">Subscribe Now!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 steam-card rounded-none p-8 w-full pulse-border">
+      <div class="container mx-auto px-4 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+          <!-- About Section -->
+          <div>
+            <h3 class="text-2xl font-black text-white mb-4">About</h3>
+            <p class="text-gray-300 text-sm leading-relaxed">
+              I am a person who has a hobby of playing games, coincidentally I can prompt
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="text-2xl font-black text-white mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li><a href="#home" class="nav-link text-gray-200 hover:text-white transition">Home</a></li>
+              <li><a href="#about" class="nav-link text-gray-200 hover:text-white transition">About</a></li>
+              <li><a href="#games" class="nav-link text-gray-200 hover:text-white transition">Games</a></li>
+              <li><a href="#media" class="nav-link text-gray-200 hover:text-white transition">Media</a></li>
+            </ul>
+          </div>
+
+          <!-- Social Media -->
+          <div>
+            <h3 class="text-2xl font-black text-white mb-4">Connect</h3>
+            <div class="flex justify-center md:justify-start space-x-4">
+              <a href="https://www.youtube.com/@Theboy-rq5dl" target="_blank" rel="noopener noreferrer"
+                class="flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                YouTube
+              </a>
+              <a href="https://steamcommunity.com/profiles/76561198868613232/" target="_blank" rel="noopener noreferrer"
+                class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 0a12 12 0 0 0-3.8 23.4c.2.4.3.8.3 1.2v.4c0 .4-.3.8-.8.8h-1.6c-.5 0-.8-.4-.8-.8v-.4c0-.4.1-.8.3-1.2A12 12 0 1 0 12 0zm0 22a10 10 0 0 1-3.2-19.4 1 1 0 0 1 .6 1.9 8 8 0 1 0 5.2 0 1 1 0 0 1 .6-1.9A10 10 0 0 1 12 22zm-4.2-6.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm8.4 5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
+                </svg>
+                Steam
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-200 font-medium text-lg">
+            Last updated: <span id="last-update">-</span>
+          </p>
+          <p class="text-gray-400 text-sm mt-2">
+            &copy; 2025 Gaming Profile Hese.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const API_BASE_URL = "http://localhost:3004";
+
+    async function fetchData() {
+      try {
+        const profileRes = await fetch(`${API_BASE_URL}/steam-profile`);
+        const gamesRes = await fetch(`${API_BASE_URL}/steam-games`);
+
+        if (!profileRes.ok || !gamesRes.ok) {
+          throw new Error("Gagal mengambil data dari server.");
+        }
+
+        const profileData = await profileRes.json();
+        const gamesData = await gamesRes.json();
+
+        if (!profileData.response?.players?.length) throw new Error("Profil tidak ditemukan.");
+        const profile = profileData.response.players[0];
+        const totalHours = gamesData.reduce((total, game) => total + Math.round(game.playtime_forever / 60), 0);
+
+        // Update Profile
+        document.getElementById("profile-section").innerHTML = `
+      <div class="steam-card rounded-3xl p-8 mb-12 text-center pulse-border">
+        <div class="profile-avatar w-40 h-40 rounded-full mx-auto mb-6 floating">
+          <img src='${profile.avatarfull}' alt='Avatar' class='w-full h-full rounded-full object-cover' />
+        </div>
+        <h1 class='text-5xl font-black text-white mb-6 tracking-tight'>${profile.personaname}</h1>
+        <div class="flex justify-center space-x-8 text-center">
+          <div class="steam-card rounded-2xl p-6">
+            <div class="stats-counter">${gamesData.length}</div>
+            <p class="text-gray-200 font-semibold text-lg">Recent Games</p>
+          </div>
+          <div class="steam-card rounded-2xl p-6">
+            <div class="stats-counter">${totalHours}</div>
+            <p class="text-gray-200 font-semibold text-lg">Total Hours</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+        // Update Games
+        document.getElementById("game-list").innerHTML = gamesData.map((game, index) => `
+      <div class='game-card rounded-2xl overflow-hidden shadow-2xl' style="animation-delay: ${index * 0.1}s">
+        <div class="relative overflow-hidden">
+          <img src="https://steamcdn-a.akamaihd.net/steam/apps/${game.appid}/header.jpg"
+               alt="${game.name}" 
+               class="w-full h-48 object-cover transform transition-transform duration-500 hover:scale-110"
+               onerror="this.src='https://placehold.co/460x215?text=No+Image'" />
+          <div class="absolute top-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-2xl text-sm font-black shadow-2xl border border-gray-600">
+            ${Math.round(game.playtime_forever / 60)}h
+          </div>
+        </div>
+        <div class='p-6'>
+          <h3 class='font-black text-2xl text-gray-900 mb-3 leading-tight tracking-tight'>${game.name}</h3>
+          <div class="flex items-center justify-between mb-4">
+            <span class='text-sm text-gray-600 font-bold uppercase tracking-wider'>Total Playtime</span>
+            <span class='text-xl font-black text-green-500'>${Math.round(game.playtime_forever / 60)} hours</span>
+          </div>
+        </div>
+      </div>
+    `).join("");
+
+        // Footer date
+        document.getElementById("last-update").textContent = new Date().toLocaleDateString('id-ID');
+
+      } catch (error) {
+        document.getElementById("profile-section").innerHTML = `<div class="text-white text-center">Error: ${error.message}</div>`;
+      }
+    }
+
+    // Smooth scroll untuk navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Panggil fungsi untuk load data
+    fetchData();
+  </script>
+</body>
+
+</html>
