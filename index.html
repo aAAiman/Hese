@@ -6,13 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hese</title>
   <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self' https://cdn.jsdelivr.net;
-	connect-src 'self' https://hese.my.id;
-        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
-        font-src 'self' https://fonts.gstatic.com;
-        img-src 'self' data: https://avatars.steamstatic.com https://steamcdn-a.akamaihd.net;
-        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-      ">
+    default-src 'self' https://cdn.jsdelivr.net;
+    connect-src 'self' https://hese.my.id;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: 
+      https://avatars.steamstatic.com 
+      https://steamcdn-a.akamaihd.net 
+      https://cdn.cloudflare.steamstatic.com 
+      https://media.st.dl.eccdnx.com 
+      https://cdn.akamai.steamstatic.com 
+      https://placehold.co;
+    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+  ">
+
+
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
