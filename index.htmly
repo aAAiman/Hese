@@ -7,11 +7,11 @@
   <title>Hese</title>
   <meta http-equiv="Content-Security-Policy" content="
         default-src 'self' https://cdn.jsdelivr.net;
-	connect-src 'self' https://hese.my.id;
         style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' data: https://avatars.steamstatic.com https://steamcdn-a.akamaihd.net;
         script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+	connect-src 'self' http://hese.my.id;
       ">
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -373,7 +373,7 @@
   </div>
 
   <script>
-    const API_BASE_URL = "https://hese.my.id";
+    const API_BASE_URL = "http://192.168.1.127:8080";
 
     async function fetchData() {
       try {
